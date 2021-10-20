@@ -1,9 +1,10 @@
 {
   "name": "chimichanga",
-  "version": "0.0.1",
+  "version": "0.0.3-b",
   "description": "General purpose helpers and utility classes, written in Typescript.",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,9 @@
   },
   "homepage": "https://github.com/sginev/chimichanga#readme",
   "devDependencies": {
+    "prettier": "^2.4.1",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^4.4.4"
   }
 }

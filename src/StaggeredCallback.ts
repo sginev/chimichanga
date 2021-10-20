@@ -10,7 +10,7 @@ export class StaggeredCaller {
     if (this.handle === -1) {
       this.handle = requestAnimationFrame(this.onEnterFrame);
     }
-  }
+  };
 
   private readonly removeMonkey = (cb: StaggerableCallback) => {
     const index = this.monkeys.indexOf(cb);
@@ -21,7 +21,7 @@ export class StaggeredCaller {
       cancelAnimationFrame(this.handle);
       this.handle = -1;
     }
-  }
+  };
 
   private readonly onEnterFrame = () => {
     this.monkeys.shift()?.();
@@ -30,21 +30,19 @@ export class StaggeredCaller {
     } else {
       this.handle = -1;
     }
-  }
+  };
 
   enqueue(): Promise<void>;
-  enqueue<T = void>(cb?: () => T): Promise<T>;
-  enqueue<T = void>(cb?: () => T)
-  {
+  enqueue<T = void>(cb: () => T): Promise<T>;
+  enqueue<T = void>(cb?: () => T) {
     if (cb != null) {
-      return new Promise<T>(resolve => this.addMonkey(() => resolve(cb())));
+      return new Promise<T>((resolve) => this.addMonkey(() => resolve(cb())));
     } else {
       return new Promise<void>(this.addMonkey);
     }
   }
 
-  enqueueCancellable<T = void>(cb?: () => T)
-  {
+  enqueueCancellable<T = void>(cb: () => T) {
     this.addMonkey(cb);
     return () => this.removeMonkey(cb);
   }
@@ -59,7 +57,11 @@ export class StaggeredCaller {
   }
 }
 
-export function staggerCallback<T, R extends any[]>(cb: (...R) => T) {
+export module StaggeredCaller {
+  export const create = () => new StaggeredCaller();
+}
+
+export function staggerCallback<T, R extends any[]>(cb: (...args: R) => T) {
   const sc = new StaggeredCaller();
-  return (...args: R): Promise<T> => sc.enqueue(() => cb(...args as R));
+  return (...args: R): Promise<T> => sc.enqueue(() => cb(...(args as R)));
 }
