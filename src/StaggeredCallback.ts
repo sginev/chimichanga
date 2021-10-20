@@ -12,6 +12,17 @@ export class StaggeredCaller {
     }
   }
 
+  private readonly removeMonkey = (cb: StaggerableCallback) => {
+    const index = this.monkeys.indexOf(cb);
+    if (index !== -1) {
+      this.monkeys.splice(index, 1);
+    }
+    if (this.monkeys.length === 0) {
+      cancelAnimationFrame(this.handle);
+      this.handle = -1;
+    }
+  }
+
   private readonly onEnterFrame = () => {
     this.monkeys.shift()?.();
     if (this.monkeys.length > 0) {
@@ -29,6 +40,21 @@ export class StaggeredCaller {
       return new Promise<T>(resolve => this.addMonkey(() => resolve(cb())));
     } else {
       return new Promise<void>(this.addMonkey);
+    }
+  }
+
+  enqueueCancellable<T = void>(cb?: () => T)
+  {
+    this.addMonkey(cb);
+    return () => this.removeMonkey(cb);
+  }
+
+  purge() {
+    this.monkeys.length = 0;
+
+    if (this.handle !== -1) {
+      cancelAnimationFrame(this.handle);
+      this.handle = -1;
     }
   }
 }
