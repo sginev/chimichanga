@@ -1,5 +1,12 @@
 type StaggerableCallback = () => unknown;
 
+/**
+ * Pile callbacks on this object, for them to be called at most one per frame.
+ * 
+ * Use to stagger multiple expensince operations, where their result may not be needed immediately.
+ * 
+ * 
+ */
 export class StaggeredCaller {
   private readonly monkeys: StaggerableCallback[] = new Array<StaggerableCallback>();
 
