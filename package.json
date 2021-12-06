@@ -2,7 +2,7 @@
   "name": "chimichanga",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.3-b",
+  "version": "0.0.7",
   "description": "General purpose helpers and utility classes, written in Typescript.",
   "scripts": {
     "build": "tsc",
